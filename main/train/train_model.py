@@ -9,25 +9,48 @@ from track_and_extract_landmarks import extract_landmarks
 import mediapipe as mp
 
 def prepare_dataset(dataset_path):
-    mp_hands = mp.solutions.hands
-    hands = mp_hands.Hands()
-    
-    X, y = [], []
-    
-    print('\nPreparing dataset...')
-    
-    for label in os.listdir(dataset_path):
-        label_path = os.path.join(dataset_path, label)
-        for img_file in os.listdir(label_path):
-            img_path = os.path.join(label_path, img_file)
-            image = cv2.imread(img_path)
-            landmarks = extract_landmarks(image, hands)
-            
-            if landmarks is not None:
-                X.append(landmarks)
-                y.append(label)
+    # Define file paths for the processed data
+    processed_X_path = 'processed_X.npy'
+    processed_y_path = 'processed_y.npy'
 
-    return np.array(X), np.array(y)
+    # Check if the processed data files exist
+    if os.path.exists(processed_X_path) and os.path.exists(processed_y_path):
+        print('\nLoading processed data from files...')
+        X = np.load(processed_X_path)
+        y = np.load(processed_y_path)
+        print('\nProcessed data loaded successfully.')
+    else:
+        # Initialize MediaPipe Hands
+        mp_hands = mp.solutions.hands
+        hands = mp_hands.Hands()
+        
+        X, y = [], []
+        
+        print('\nProcessing dataset...')
+        
+        # Iterate over each label (class)
+        for label in os.listdir(dataset_path):
+            label_path = os.path.join(dataset_path, label)
+            # Iterate over each image file in the label directory
+            for img_file in os.listdir(label_path):
+                img_path = os.path.join(label_path, img_file)
+                image = cv2.imread(img_path)
+                landmarks = extract_landmarks(image, hands)
+                
+                if landmarks is not None:
+                    X.append(landmarks)
+                    y.append(label)
+        
+        # Convert lists to numpy arrays
+        X = np.array(X)
+        y = np.array(y)
+
+        # Save the processed data to files
+        np.save(processed_X_path, X)
+        np.save(processed_y_path, y)
+        print('\nProcessed data saved to files.')
+
+    return X, y
 
 def train_model():
     # Define paths
@@ -37,72 +60,83 @@ def train_model():
     X, y = prepare_dataset(train_data_dir)
     print('\nDataset prepared successfully.')
     
+    # Ensure X has the correct shape
     X = X.reshape(X.shape[0], *global_params.INPUT_SHAPE)
     
-    num_classes = len(np.unique(y))
+    # Split the data into training and validation sets
+    from sklearn.model_selection import train_test_split
+    X_train, X_val, y_train, y_val = train_test_split(
+        X, y, test_size=0.2,
+        random_state=42,
+        stratify=y
+    )
+    
+    # Convert labels to integers
+    from sklearn.preprocessing import LabelEncoder
+    label_encoder = LabelEncoder()
+    y_train_encoded = label_encoder.fit_transform(y_train)
+    y_val_encoded = label_encoder.transform(y_val)
+
+    # Save class labels
+    import numpy as np
+    np.save('class_labels.npy', label_encoder.classes_)
+    
+    # Convert labels to categorical (one-hot encoding)
+    from tensorflow.keras.utils import to_categorical
+    num_classes = len(label_encoder.classes_)
+    y_train_categorical = to_categorical(y_train_encoded, num_classes=num_classes)
+    y_val_categorical = to_categorical(y_val_encoded, num_classes=num_classes)
 
     model = create_model(global_params.INPUT_SHAPE, num_classes)
     print('\nModel created successfully.')
-
+    
     # Print the model summary
     model.summary()
-
-    # Data augmentation
-    datagen = ImageDataGenerator(rotation_range=10, zoom_range=0.2, width_shift_range=0.2, height_shift_range=0.2)
-    datagen.fit(X)
-
+    
+    # Data augmentation for training data
+    print('\nGenerating data augmentation...')
+    train_datagen = ImageDataGenerator(
+        rotation_range=10,
+        zoom_range=0.2,
+        width_shift_range=0.2,
+        height_shift_range=0.2
+    )
+    print('\nData augmentation for training data prepared.')
+    
+    print('\nFitting training data generator...')
+    train_datagen.fit(X_train)
+    print('\nTraining data generator fitted successfully.')
+    
+    # No augmentation for validation data
+    val_datagen = ImageDataGenerator()
+    
+    # Create generators
+    train_generator = train_datagen.flow(
+        X_train,
+        y_train_categorical,
+        batch_size=32
+    )
+    val_generator = val_datagen.flow(
+        X_val,
+        y_val_categorical,
+        batch_size=32
+    )
+    
     # Model training
-    checkpoint = ModelCheckpoint(global_params.MODEL_PATH, save_best_only=True)
-    model.fit(datagen.flow(X, y, batch_size=32), epochs=1, validation_split=0.2, callbacks=[checkpoint])
+    print('\nSetting up model checkpoint...')
+    checkpoint = ModelCheckpoint(global_params.SAVED_MODEL_PATH, save_best_only=True)
+    print('\nModel checkpoint set up.')
+    
+    print('\nTraining Model...')
+    model.fit(
+        train_generator,
+        epochs=global_params.EPOCHS,
+        validation_data=val_generator,
+        callbacks=[checkpoint]
+    )
     print('\nModel trained successfully.')
-
+    
     # Save the trained model
+    print('\nSaving Model...')
     model.save(global_params.SAVED_MODEL_PATH)
     print('\nModel saved successfully.')
-
-    # # Image Data Generator for augmentation
-    # train_datagen = ImageDataGenerator(
-    #     rescale=1.0/255,
-    #     shear_range=0.2,
-    #     zoom_range=0.2,
-    #     horizontal_flip=True
-    # )
-    
-    # val_datagen = ImageDataGenerator(rescale=1.0/255)
-    
-    # # Load training data
-    # train_generator = train_datagen.flow_from_directory(
-    #     train_data_dir,
-    #     target_size=(global_params.IMG_HEIGHT, global_params.IMG_WIDTH),
-    #     batch_size=global_params.BATCH_SIZE,
-    #     class_mode='categorical'
-    # )
-    
-    # # Load validation data
-    # val_generator = val_datagen.flow_from_directory(
-    #     val_data_dir,
-    #     target_size=(global_params.IMG_HEIGHT, global_params.IMG_WIDTH),
-    #     batch_size=global_params.BATCH_SIZE,
-    #     class_mode='categorical'
-    # )
-    
-    # # Create and compile the model
-    # model = create_model(global_params.IMG_HEIGHT, global_params.IMG_WIDTH, global_params.NUM_CLASSES)
-    # print('\nModel created successfully.')
-
-    # model.compile(optimizer=Adam(learning_rate=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
-    # print('\nModel compiled successfully.')
-
-    # # Train the model
-    # history = model.fit(
-    #     train_generator,
-    #     steps_per_epoch=train_generator.samples // global_params.BATCH_SIZE,
-    #     validation_data=val_generator,
-    #     validation_steps=val_generator.samples // global_params.BATCH_SIZE,
-    #     epochs=global_params.EPOCHS
-    # )
-    # print('\nModel trained successfully.')
-
-    # # Save the trained model
-    # model.save(global_params.SAVED_MODEL_PATH)
-    # print('\nModel saved successfully.')

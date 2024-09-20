@@ -4,10 +4,7 @@
 
 # # Batch size and number of epochs
 # BATCH_SIZE = 32
-# EPOCHS = 1
-
-# # Number of classes
-# NUM_CLASSES = 21  # Number of static signs in the manual alphabet
+EPOCHS = 50
 
 # Paths to data and saved models
 TRAIN_DATA_DIR = '../datasets/training'
