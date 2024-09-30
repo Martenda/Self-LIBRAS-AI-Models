@@ -10,8 +10,8 @@ import mediapipe as mp
 
 def prepare_dataset(dataset_path):
     # Define file paths for the processed data
-    processed_X_path = 'processed_X.npy'
-    processed_y_path = 'processed_y.npy'
+    processed_X_path = global_params.SAVED_PRE_PROCESSED_DATA_DIR + 'processed_X.npy'
+    processed_y_path = global_params.SAVED_PRE_PROCESSED_DATA_DIR + 'processed_y.npy'
 
     # Check if the processed data files exist
     if os.path.exists(processed_X_path) and os.path.exists(processed_y_path):
@@ -79,7 +79,7 @@ def train_model():
 
     # Save class labels
     import numpy as np
-    np.save('class_labels.npy', label_encoder.classes_)
+    np.save(global_params.SAVED_PRE_PROCESSED_DATA_DIR + 'class_labels.npy', label_encoder.classes_)
     
     # Convert labels to categorical (one-hot encoding)
     from tensorflow.keras.utils import to_categorical

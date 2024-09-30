@@ -6,7 +6,7 @@ if __name__ == "__main__":
 
     print('\n' + 'Execution inittiated.' + '\n')
     
-    train_model()
-    # capture_camera()
+    # train_model()
+    capture_camera()
     
     print('\n' + 'Execution successfully done.' + '\n')
