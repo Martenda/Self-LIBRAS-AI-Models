@@ -1,0 +1,15 @@
+# Instructions to run this project in a VM to train the AI:
+
+git clone https://github.com/Martenda/TCC-1.git
+# Log-in with github account
+cd TCC-1
+git checkout -b develop origin/develop
+git pull
+# Download vscode
+# Download Python
+# Open the project dir on vscode
+# Open new Terminal on vscode
+# Run the requirements.txt
+# Transfer the Dataset to the VM
+# Place the Dataset inside project, on proper dir
+# Decompress/unzip the Dataset

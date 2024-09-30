@@ -1,0 +1,17 @@
+pip install opencv-python
+# Installs:
+#   opencv-python 4.10.0.84
+#   numpy 2.0.1
+pip install mediapipe
+# Installs:
+#   mediapipe 0.10.14
+pip install tensorflow
+# Installs (update if already installed):
+#   tensorflow 2.17.0
+#   numpy 2.0.1
+#   keras 3.5.0
+pip install -U scikit-learn
+# Installs:
+#   joblib-1.4.2
+#   scikit-learn-1.5.1
+#   threadpoolct1-3.5.0

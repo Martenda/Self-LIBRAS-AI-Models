@@ -1,0 +1,6 @@
+datasets/
+models/
+working_area
+hidden-folder/
+__pycache__/
+sklearn-env/
