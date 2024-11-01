@@ -63,6 +63,9 @@ def train_model():
     # Ensure X has the correct shape
     X = X.reshape(X.shape[0], *global_params.INPUT_SHAPE)
     
+    # # X is the array of landmarks
+    # X_flat = X.reshape(X.shape[0], -1)
+
     # Split the data into training and validation sets
     from sklearn.model_selection import train_test_split
     X_train, X_val, y_train, y_val = train_test_split(
@@ -76,23 +79,68 @@ def train_model():
     label_encoder = LabelEncoder()
     y_train_encoded = label_encoder.fit_transform(y_train)
     y_val_encoded = label_encoder.transform(y_val)
+    # y_encoded = label_encoder.fit_transform(y)
 
     # Save class labels
     import numpy as np
     np.save(global_params.SAVED_PRE_PROCESSED_DATA_DIR + 'class_labels.npy', label_encoder.classes_)
     
+    # import joblib
+    # joblib.dump(label_encoder, global_params.SAVED_MODEL_DIR_PATH + 'label_encoder.joblib')
+
+    # # Split the data into training and validation sets
+    # X_train_othermodels, X_test, y_train_othermodels, y_test = train_test_split(
+    #     X_flat, y_encoded, test_size=0.2, random_state=42, stratify=y_encoded
+    # )
+
+    # # Random Forest
+    # from sklearn.ensemble import RandomForestClassifier
+    # rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
+    # rf_model.fit(X_train_othermodels, y_train_othermodels)
+
+    # # SVM
+    # from sklearn.svm import SVC
+    # svm_model = SVC(kernel='rbf', probability=True, random_state=42)
+    # svm_model.fit(X_train_othermodels, y_train_othermodels)
+
+    # # KNN - K Nearest Neighbors
+    # from sklearn.neighbors import KNeighborsClassifier
+    # knn_model = KNeighborsClassifier(n_neighbors=5)
+    # knn_model.fit(X_train_othermodels, y_train_othermodels)
+
+    # # Evaluaing the Models
+    # from sklearn.metrics import accuracy_score
+
+    # # Random Forest
+    # rf_pred = rf_model.predict(X_test)
+    # print('Random Forest Accuracy:', accuracy_score(y_test, rf_pred))
+
+    # # SVM
+    # svm_pred = svm_model.predict(X_test)
+    # print('SVM Accuracy:', accuracy_score(y_test, svm_pred))
+
+    # # KNN
+    # knn_pred = knn_model.predict(X_test)
+    # print('KNN Accuracy:', accuracy_score(y_test, knn_pred))
+
+    # # Saving Trained Models
+    # joblib.dump(rf_model, global_params.SAVED_MODEL_DIR_PATH + 'random_forest_model.joblib')
+    # joblib.dump(svm_model, global_params.SAVED_MODEL_DIR_PATH + 'svm_model.joblib')
+    # joblib.dump(knn_model, global_params.SAVED_MODEL_DIR_PATH + 'knn_model.joblib')
+
     # Convert labels to categorical (one-hot encoding)
     from tensorflow.keras.utils import to_categorical
     num_classes = len(label_encoder.classes_)
     y_train_categorical = to_categorical(y_train_encoded, num_classes=num_classes)
     y_val_categorical = to_categorical(y_val_encoded, num_classes=num_classes)
 
+    # Build the model
     model = create_model(global_params.INPUT_SHAPE, num_classes)
     print('\nModel created successfully.')
     
     # Print the model summary
     model.summary()
-    
+
     # Data augmentation for training data
     print('\nGenerating data augmentation...')
     train_datagen = ImageDataGenerator(
@@ -101,32 +149,33 @@ def train_model():
         width_shift_range=0.2,
         height_shift_range=0.2
     )
-    print('\nData augmentation for training data prepared.')
+    print('\nData augmentation for training generated successfully.')
     
-    print('\nFitting training data generator...')
+    print('\nFitting generated training data...')
     train_datagen.fit(X_train)
-    print('\nTraining data generator fitted successfully.')
+    print('\nGenerated training data fitted successfully.')
     
     # No augmentation for validation data
     val_datagen = ImageDataGenerator()
     
-    # Create generators
+    # Create data generators
     train_generator = train_datagen.flow(
         X_train,
         y_train_categorical,
-        batch_size=32
+        batch_size=global_params.BATCH_SIZE
     )
     val_generator = val_datagen.flow(
         X_val,
         y_val_categorical,
-        batch_size=32
+        batch_size=global_params.BATCH_SIZE
     )
     
-    # Model training
+    # Define checkpoints for the model training
     print('\nSetting up model checkpoint...')
     checkpoint = ModelCheckpoint(global_params.SAVED_MODEL_PATH, save_best_only=True)
-    print('\nModel checkpoint set up.')
+    print('\nModel checkpoint setted up successfully.')
     
+    # Train the model
     print('\nTraining Model...')
     model.fit(
         train_generator,
