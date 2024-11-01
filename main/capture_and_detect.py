@@ -5,9 +5,9 @@ from track_and_extract_landmarks import extract_landmarks
 import global_params
 import numpy as np  # Import numpy to load class labels
 
-def capture_camera():
+def capture_camera(draw_landmarks_on_camera):
     # Initialize video capture from the camera
-    cap = cv2.VideoCapture(2)
+    cap = cv2.VideoCapture(0)
     
     # Using the IP address of the phone's camera
     # ip_camera_url = 'http://192.168.1.65:8080/video'
@@ -20,19 +20,18 @@ def capture_camera():
     class_labels = np.load(global_params.SAVED_PRE_PROCESSED_DATA_DIR + 'class_labels.npy')
 
     # Initialize MediaPipe Hand solution
-    mp_hands = mp.solutions.hands
-    hands = mp_hands.Hands()
+    mp_hands = mp.solutions.hands.Hands()
 
     # Create a named window with the ability to resize
     cv2.namedWindow('Live Camera', cv2.WINDOW_NORMAL)
 
-    # Set a custom size for the window (e.g., 80% of the screen size)
-    screen_width = 1920  # Adjust based on your screen resolution
-    screen_height = 1080  # Adjust based on your screen resolution
+    # Set a custom size for the window (deafult defined as 80% of the screen size)
+    screen_width = 1920  # It can be adjusted based on screen resolution
+    screen_height = 1080  # It can be adjusted based on screen resolution
     window_width = int(screen_width * 0.8)
     window_height = int(screen_height * 0.8)
     
-    # Resize the window to 80% of the screen size
+    # Resize the window to the percentage of the screen size pre-defined
     cv2.resizeWindow('Live Camera', window_width, window_height)
 
     while cap.isOpened():
@@ -41,11 +40,11 @@ def capture_camera():
             print("Ignoring empty camera frame.")
             continue
 
-        # Flip the image horizontally for a later selfie-view display
+        # Flip the image horizontally for a selfie-view display
         image = cv2.flip(image, 1)
 
         # Extract hand landmarks
-        hand_landmarks = extract_landmarks(image, hands)
+        hand_landmarks = extract_landmarks(image, mp_hands, draw_landmarks_on_camera, mp.solutions)
 
         # If landmarks are found, reshape and make prediction
         if hand_landmarks is not None:

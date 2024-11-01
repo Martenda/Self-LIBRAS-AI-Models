@@ -35,7 +35,7 @@ def prepare_dataset(dataset_path):
             for img_file in os.listdir(label_path):
                 img_path = os.path.join(label_path, img_file)
                 image = cv2.imread(img_path)
-                landmarks = extract_landmarks(image, hands)
+                landmarks = extract_landmarks(image, hands, draw_landmarks_on_camera=False, mp_solutions=None)
                 
                 if landmarks is not None:
                     X.append(landmarks)

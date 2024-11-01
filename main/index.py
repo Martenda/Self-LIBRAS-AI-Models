@@ -7,6 +7,6 @@ if __name__ == "__main__":
     print('\n' + 'Execution inittiated.' + '\n')
     
     # train_model()
-    capture_camera()
+    # capture_camera(draw_landmarks_on_camera=True)
     
     print('\n' + 'Execution successfully done.' + '\n')
