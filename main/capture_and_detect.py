@@ -3,9 +3,9 @@ import mediapipe as mp
 from tensorflow.keras.models import load_model
 from track_and_extract_landmarks import extract_landmarks
 import global_params
-import numpy as np  # Import numpy to load class labels
+import numpy as np  # Import numpy to load the class labels
 import joblib
-import time  # Import to measure FPS
+import time  # Import time to measure FPS
 
 def capture_camera(draw_landmarks_on_camera):
     # Initialize video capture from the camera

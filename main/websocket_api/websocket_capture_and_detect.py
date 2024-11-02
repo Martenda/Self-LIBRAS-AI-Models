@@ -79,7 +79,7 @@ def capture_camera_online_websocket():
     # Allow CORS for the specified origins
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"], # Restricting to Self LIBRAS webapp only ("https://self-libras.vercel.app/")
+        allow_origins=["https://self-libras.vercel.app/"], # Restricting to Self LIBRAS webapp only ("https://self-libras.vercel.app/"), or "*" for all
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
@@ -135,8 +135,6 @@ def capture_camera_online_websocket():
             print("Client disconnected")
         except Exception as e:
             print(f"Connection error: {e}")
-
-    # print('\nWebsocket api started to capture the requests\n')
     
     # Starts the API App
     import uvicorn

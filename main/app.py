@@ -1,5 +1,4 @@
 from capture_and_detect import capture_camera
-# from train import train.index_train
 from train.train_model import train_model
 from websocket_api.websocket_capture_and_detect import capture_camera_online_websocket
 
