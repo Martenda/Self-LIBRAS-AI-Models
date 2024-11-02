@@ -93,15 +93,43 @@ def capture_camera(draw_landmarks_on_camera):
             knn_label = label_encoder.inverse_transform(knn_prediction)[0]
             
             # Printing the predicted sign and the confidence of the prediction
-            print(f'Predicted Sign: {predicted_label} (Confidence: {confidence * 100:.1f}%)')
-
-            # Display the prediction on the image
-            cv2.putText(image, f'{predicted_label} ({confidence * 100:.1f}%)', (50, 50),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            print(f'CNN: {predicted_label} (Confidence: {confidence * 100:.1f}%)')
             print(f'RF : {rf_label} (Confidence: {rf_confidence[0] * 100:.1f}%)')
             print(f'SVM: {svm_label} (Confidence: {svm_confidence[0] * 100:.1f}%)')
             print(f'KNN: {knn_label} (Confidence: {knn_confidence[0] * 100:.1f}%)')
 
+            # Display the predictions on the image
+            cv2.putText(image, f'CNN:',                             (5, 30),    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0),   2)
+            cv2.putText(image, f'{predicted_label}',                (85, 30),   cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0),   2)
+            cv2.putText(image, f'({confidence * 100:.1f}%)',        (115, 30),  cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0),   2)
+            # cv2.putText(image, f'CNN: {predicted_label} ({confidence * 100:.1f}%)', (5, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            cv2.putText(image, f'RF:',                              (5, 70),    cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0),   2)
+            cv2.putText(image, f'{rf_label}',                       (85, 70),   cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0),   2)
+            cv2.putText(image, f'({rf_confidence[0] * 100:.1f}%)',  (115, 70),  cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0),   2)
+            # cv2.putText(image, f'RF : {rf_label} ({rf_confidence[0] * 100:.1f}%)', (5, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+            cv2.putText(image, f'SVM:',                             (5, 110),   cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+            cv2.putText(image, f'{svm_label}',                      (85, 110),  cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+            cv2.putText(image, f'({svm_confidence[0] * 100:.1f}%)', (115, 110), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+            # cv2.putText(image, f'SVM: {svm_label} ({svm_confidence[0] * 100:.1f}%)', (5, 110), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+            cv2.putText(image, f'KNN:',                             (5, 150),   cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255),   2)
+            cv2.putText(image, f'{knn_label}',                      (85, 150),  cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255),   2)
+            cv2.putText(image, f'({knn_confidence[0] * 100:.1f}%)', (115, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255),   2)
+            # cv2.putText(image, f'KNN: {knn_label} ({knn_confidence[0] * 100:.1f}%)', (5, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+
+            # Check if any model predicts the target letter with at least 50% confidence
+            message_y_position = 200  # Starting position for messages
+            if predicted_label == target_letter and confidence >= 0.5:
+                cv2.putText(image, 'Congrats! CNN predicted your letter!', (5, message_y_position), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                message_y_position += 30
+            if rf_label == target_letter and rf_confidence[0] >= 0.5:
+                cv2.putText(image, 'Congrats! RF predicted your letter!', (5, message_y_position), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+                message_y_position += 30
+            if svm_label == target_letter and svm_confidence[0] >= 0.5:
+                cv2.putText(image, 'Congrats! SVM predicted your letter!', (5, message_y_position), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+                message_y_position += 30
+            if knn_label == target_letter and knn_confidence[0] >= 0.5:
+                cv2.putText(image, 'Congrats! KNN predicted your letter!', (5, message_y_position), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                message_y_position += 30
         # Show the image on screen with the custom window size
         cv2.imshow('Live Camera', image)
 
