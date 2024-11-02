@@ -4,6 +4,7 @@ from tensorflow.keras.models import load_model
 from track_and_extract_landmarks import extract_landmarks
 import global_params
 import numpy as np  # Import numpy to load class labels
+import joblib
 
 def capture_camera(draw_landmarks_on_camera):
     # Initialize video capture from the camera
@@ -15,6 +16,14 @@ def capture_camera(draw_landmarks_on_camera):
 
     # Load the trained model
     model = load_model(global_params.SAVED_MODEL_PATH)
+
+    # Load models
+    rf_model = joblib.load(global_params.SAVED_MODEL_DIR_PATH + 'random_forest_model.joblib')
+    svm_model = joblib.load(global_params.SAVED_MODEL_DIR_PATH + 'svm_model.joblib')
+    knn_model = joblib.load(global_params.SAVED_MODEL_DIR_PATH + 'knn_model.joblib')
+
+    # Load label encoder
+    label_encoder = joblib.load(global_params.SAVED_MODEL_DIR_PATH + 'label_encoder.joblib')
 
     # Load class labels
     class_labels = np.load(global_params.SAVED_PRE_PROCESSED_DATA_DIR + 'class_labels.npy')
@@ -48,11 +57,40 @@ def capture_camera(draw_landmarks_on_camera):
 
         # If landmarks are found, reshape and make prediction
         if hand_landmarks is not None:
-            hand_landmarks = hand_landmarks.reshape(1, *global_params.INPUT_SHAPE)
-            prediction = model.predict(hand_landmarks)
+            # Predict the Sign using the pre-loaded Model
+            hand_landmarks_reshaped = hand_landmarks.reshape(1, *global_params.INPUT_SHAPE)
+            prediction = model.predict(hand_landmarks_reshaped)
             predicted_class_index = prediction.argmax()
             predicted_label = class_labels[predicted_class_index]
             confidence = prediction[0][predicted_class_index]
+            
+            # Flatten landmarks
+            landmarks_flat = hand_landmarks.flatten().reshape(1, -1)
+            
+            # # Make predictions
+            # rf_prediction = rf_model.predict(landmarks_flat)
+            # svm_prediction = svm_model.predict(landmarks_flat)
+            # knn_prediction = knn_model.predict(landmarks_flat)
+            
+            # Get prediction probabilities
+            rf_probs = rf_model.predict_proba(landmarks_flat)
+            svm_probs = svm_model.predict_proba(landmarks_flat)
+            knn_probs = knn_model.predict_proba(landmarks_flat)
+
+            # Get the predicted class indices
+            rf_prediction = np.argmax(rf_probs, axis=1)
+            svm_prediction = np.argmax(svm_probs, axis=1)
+            knn_prediction = np.argmax(knn_probs, axis=1)
+
+            # Get the confidence scores
+            rf_confidence = np.max(rf_probs, axis=1)
+            svm_confidence = np.max(svm_probs, axis=1) # SVM probability estimates are calculated using cross-validation and may not be as reliable as those from probabilistic models. Use them cautiously and consider validating the confidence scores.
+            knn_confidence = np.max(knn_probs, axis=1)
+            
+            # Decode labels
+            rf_label = label_encoder.inverse_transform(rf_prediction)[0]
+            svm_label = label_encoder.inverse_transform(svm_prediction)[0]
+            knn_label = label_encoder.inverse_transform(knn_prediction)[0]
             
             # Printing the predicted sign and the confidence of the prediction
             print(f'Predicted Sign: {predicted_label} (Confidence: {confidence * 100:.1f}%)')
@@ -60,6 +98,9 @@ def capture_camera(draw_landmarks_on_camera):
             # Display the prediction on the image
             cv2.putText(image, f'{predicted_label} ({confidence * 100:.1f}%)', (50, 50),
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            print(f'RF : {rf_label} (Confidence: {rf_confidence[0] * 100:.1f}%)')
+            print(f'SVM: {svm_label} (Confidence: {svm_confidence[0] * 100:.1f}%)')
+            print(f'KNN: {knn_label} (Confidence: {knn_confidence[0] * 100:.1f}%)')
 
         # Show the image on screen with the custom window size
         cv2.imshow('Live Camera', image)

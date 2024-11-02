@@ -1,6 +1,7 @@
 from capture_and_detect import capture_camera
 # from train import train.index_train
 from train.train_model import train_model
+from websocket_api.websocket_capture_and_detect import capture_camera_online_websocket
 
 if __name__ == "__main__":
 
@@ -8,5 +9,6 @@ if __name__ == "__main__":
     
     # train_model()
     # capture_camera(draw_landmarks_on_camera=True)
+    capture_camera_online_websocket()
     
     print('\n' + 'Execution successfully done.' + '\n')
