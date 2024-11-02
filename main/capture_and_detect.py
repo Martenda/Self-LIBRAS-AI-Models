@@ -5,6 +5,7 @@ from track_and_extract_landmarks import extract_landmarks
 import global_params
 import numpy as np  # Import numpy to load class labels
 import joblib
+import time  # Import to measure FPS
 
 def capture_camera(draw_landmarks_on_camera):
     # Initialize video capture from the camera
@@ -43,11 +44,20 @@ def capture_camera(draw_landmarks_on_camera):
     # Resize the window to the percentage of the screen size pre-defined
     cv2.resizeWindow('Live Camera', window_width, window_height)
 
+    # Initialize FPS variables
+    prev_frame_time = 0
+    new_frame_time = 0
+
+    target_letter = ''
+
     while cap.isOpened():
         success, image = cap.read()
         if not success:
             print("Ignoring empty camera frame.")
             continue
+
+        # Measure FPS timing
+        new_frame_time = time.time()
 
         # Flip the image horizontally for a selfie-view display
         image = cv2.flip(image, 1)
@@ -130,6 +140,14 @@ def capture_camera(draw_landmarks_on_camera):
             if knn_label == target_letter and knn_confidence[0] >= 0.5:
                 cv2.putText(image, 'Congrats! KNN predicted your letter!', (5, message_y_position), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
                 message_y_position += 30
+
+        # Calculate FPS
+        fps = 1 / (new_frame_time - prev_frame_time)
+        # print(new_frame_time - prev_frame_time) # miliseconds of each processed frame
+        prev_frame_time = new_frame_time
+        # Display FPS on the image
+        cv2.putText(image, f'FPS: {int(fps)}', (5, 450), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+
         # Show the image on screen with the custom window size
         cv2.imshow('Live Camera', image)
 
