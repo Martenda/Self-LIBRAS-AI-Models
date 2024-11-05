@@ -85,20 +85,17 @@ def capture_camera_online_websocket():
         allow_headers=["*"],
     )
 
-    # Load the trained model and class labels
+    # Load the trained model
     model = load_model(global_params.SAVED_MODEL_PATH)
+    # Load class labels
     class_labels = np.load(global_params.SAVED_MODEL_DIR_PATH + '../class_labels.npy')
     
     # Load models
     rf_model = joblib.load(global_params.SAVED_MODEL_DIR_PATH + 'random_forest_model.joblib')
     svm_model = joblib.load(global_params.SAVED_MODEL_DIR_PATH + 'svm_model.joblib')
     knn_model = joblib.load(global_params.SAVED_MODEL_DIR_PATH + 'knn_model.joblib')
-
     # Load label encoder
     label_encoder = joblib.load(global_params.SAVED_MODEL_DIR_PATH + 'label_encoder.joblib')
-
-    # Load class labels
-    class_labels = np.load(global_params.SAVED_PRE_PROCESSED_DATA_DIR + 'class_labels.npy')
 
     # Initialize MediaPipe Hand solution
     mp_hands = mp.solutions.hands.Hands()
