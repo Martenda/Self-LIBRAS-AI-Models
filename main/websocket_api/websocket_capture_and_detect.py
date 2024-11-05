@@ -87,7 +87,7 @@ def capture_camera_online_websocket():
 
     # Load the trained model and class labels
     model = load_model(global_params.SAVED_MODEL_PATH)
-    class_labels = np.load(global_params.SAVED_PRE_PROCESSED_DATA_DIR + 'class_labels.npy')
+    class_labels = np.load(global_params.SAVED_MODEL_DIR_PATH + '../class_labels.npy')
     
     # Load models
     rf_model = joblib.load(global_params.SAVED_MODEL_DIR_PATH + 'random_forest_model.joblib')
@@ -139,3 +139,4 @@ def capture_camera_online_websocket():
     # Starts the API App
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=5000)
+    # uvicorn.run("main:app", host="0.0.0.0", port=5000)

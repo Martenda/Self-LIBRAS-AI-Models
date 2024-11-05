@@ -1,0 +1,7 @@
+# flyctl launch added from .gitignore
+**\datasets
+**\working_area
+**\hidden-folder
+**\__pycache__
+**\sklearn-env
+fly.toml
