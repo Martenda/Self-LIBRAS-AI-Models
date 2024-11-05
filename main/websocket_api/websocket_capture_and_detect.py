@@ -135,5 +135,5 @@ def capture_camera_online_websocket():
     
     # Starts the API App
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=5000)
+    uvicorn.run(app, host="0.0.0.0", port=80)
     # uvicorn.run("main:app", host="0.0.0.0", port=5000)
