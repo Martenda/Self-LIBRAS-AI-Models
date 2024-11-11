@@ -4,4 +4,7 @@
 **\hidden-folder
 **\__pycache__
 **\sklearn-env
-fly.toml
+**\certificados_ssl
+fly.toml#
+deploy-aci#azure.yaml#
+Procfile#
