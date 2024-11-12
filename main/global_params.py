@@ -10,8 +10,10 @@ EPOCHS = 50
 TRAIN_DATA_DIR = '../datasets/training'
 VAL_DATA_DIR = '../datasets/test'
 SAVED_PRE_PROCESSED_DATA_DIR = '../working_area/pre-processed_data_from_videos/'
-SAVED_MODEL_PATH = '../models/libras_static_signs_model.keras'
-SAVED_MODEL_DIR_PATH = '../models/other_models/'
+# SAVED_MODEL_PATH = '../models/libras_static_signs_model.keras'
+# SAVED_MODEL_DIR_PATH = '../models/other_models/'
+SAVED_MODEL_PATH = '/app/models/libras_static_signs_model.keras'
+SAVED_MODEL_DIR_PATH = '/app/models/other_models/'
 
 # Defines shape for input layer for the model construction
 SEQUENCE_LENGTH = 1    # Number of frames for static signs

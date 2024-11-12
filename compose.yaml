@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .  # Diretório onde está o Dockerfile e o código
+      dockerfile: Dockerfile  # Nome do Dockerfile
+    ports:
+      - "5000:5000"  # Mapeia a porta 5000 do host para a porta 5000 do container

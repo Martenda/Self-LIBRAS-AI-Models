@@ -1,10 +1,10 @@
 # flyctl launch added from .gitignore
-**\datasets
-**\working_area
-**\hidden-folder
-**\__pycache__
-**\sklearn-env
-**\certificados_ssl
+**/datasets
+**/working_area
+**/hidden-folder
+**/__pycache__
+**/sklearn-env
+**/certificados_ssl
 fly.toml#
 deploy-aci#azure.yaml#
 Procfile#
