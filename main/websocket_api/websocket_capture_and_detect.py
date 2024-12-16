@@ -79,7 +79,7 @@ def capture_camera_online_websocket():
     # Allow CORS for the specified origins
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["https://self-libras.vercel.app/"], # Restricting to Self LIBRAS webapp only ("https://self-libras.vercel.app/"), or "*" for all
+        allow_origins=["*"], # Restricting to Self LIBRAS webapp only ("https://self-libras.vercel.app/"), or "*" for all
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
