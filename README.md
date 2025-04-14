@@ -71,10 +71,23 @@ GIFs here...
 
 ## Screenshots  
 
-... description ...
+Prototype (MVP):
 
-<img src="https://github.com/user-attachments/assets/9e8b72a0-74d5-47b9-9a29-8f7752fcf2f8" width="256">
-<img src="https://github.com/user-attachments/assets/0897a1a3-0db1-4a41-a460-a44bab333eb4" width="390">
+<img src="https://github.com/user-attachments/assets/62bcb094-e173-4b05-be33-c7dcc08cb8dd" width="450">
+<img src="https://github.com/user-attachments/assets/c95e45c2-2d7d-42aa-bf82-5fc13d818540" width="450">
+<img src="https://github.com/user-attachments/assets/642c7749-7d7f-4e48-842d-04fcc644c7fe" width="450">
+<img src="https://github.com/user-attachments/assets/9d82c91d-60ee-4d5f-b555-2d698850b0ed" width="450">
+<img src="https://github.com/user-attachments/assets/1c6837bf-5bb2-4153-a8f3-8e62dc06c16f" width="450">
+<img src="https://github.com/user-attachments/assets/e4507d03-2a08-421b-a882-9ba14f1c134a" width="450">
+
+WebApp (Final Product):
+
+<img src="https://github.com/user-attachments/assets/ed943c18-b6bf-400f-a35c-47e6255555dd" width="450">
+<img src="https://github.com/user-attachments/assets/506e2d56-5e26-44d2-a5a5-d857a2647aee" width="450">
+<img src="https://github.com/user-attachments/assets/003737b6-ce59-4087-9977-9c53a4198036" width="450">
+<img src="https://github.com/user-attachments/assets/92585b29-1d7e-4725-ab2e-d83580cdc60a" width="450">
+<img src="https://github.com/user-attachments/assets/55ec1957-d00e-4fd9-bf0c-779ce7296256" width="225">
+<img src="https://github.com/user-attachments/assets/8adec190-0038-453c-ac67-304a1b680a3e" width="225">
 
 ## Features  
 ✔ **Real-time AI-powered sign recognition** using a combination of CNN and LSTM  
