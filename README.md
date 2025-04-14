@@ -8,21 +8,46 @@ A deep learning-powered backend for recognizing static LIBRAS (Brazilian Sign La
 
 This project was developed as part of a top-grade undergraduate thesis (TCC), and this research was scientifically validated with statistical rigor, establishing it as an effective learning tool with proven success.
 
+<br>
+
 <div align="center">
   <a href="https://opensource.org/license/mit">
-    <img src="https://img.shields.io/badge/License-MIT-red.svg">
+    <img src="https://img.shields.io/badge/License-MIT-C20018.svg?logo=opensourceinitiative&logoColor=FFFFFF">
   </a>
   <a href='https://www.python.org/'>
-    <img src='https://img.shields.io/badge/Python-3.9.12-green.svg' />
+    <img src='https://img.shields.io/badge/Python-3.9.12-31C754.svg?logo=python&logoColor=31C754' />
   </a>
   <a href="https://www.tensorflow.org/">
-    <img src="https://img.shields.io/badge/TensorFlow-2.17-orange.svg">
+    <img src="https://img.shields.io/badge/TensorFlow-2.17-FF7300.svg?logo=tensorflow">
   </a>
   <a href='https://opencv.org/'>
-    <img src='https://img.shields.io/badge/OpenCV-4.10-blue.svg' />
+    <img src='https://img.shields.io/badge/OpenCV-4.10-128EFF.svg?logo=opencv'/>
   </a>
   <a href="https://mediapipe.dev/">
-    <img src="https://img.shields.io/badge/MediaPipe-0.10.14-yellow.svg">
+    <img src="https://img.shields.io/badge/MediaPipe-0.10.14-0097A7.svg?logo=mediapipe">
+  </a>  
+</div>
+
+<br>
+
+<div align="center">
+  <a href="https://scikit-learn.org/">
+    <img src="https://img.shields.io/badge/scikit_learn-1.5.2-F7931E.svg?logo=scikitlearn">
+  </a>
+  <a href="https://fastapi.tiangolo.com/">
+    <img src="https://img.shields.io/badge/FastAPI-0.115.3-05988A.svg?logo=fastapi">
+  </a>
+  <a href="">
+    <img src="https://img.shields.io/badge/WebSockets-13.1-FFD743.svg">
+  </a>
+  <a href="https://www.uvicorn.org/">
+    <img src="https://img.shields.io/badge/Uvicorn-0.32.0-4051B5.svg?logo=gunicorn&logoColor=FFFFFF">
+  </a>
+  <a href="https://numpy.org/">
+    <img src="https://img.shields.io/badge/NumPy-1.26.4-4D77CF.svg?logo=numpy">
+  </a>
+  <a href="https://matplotlib.org/">
+    <img src="https://img.shields.io/badge/Matplotlib-3.9.2-FEA96F.svg">
   </a>  
 </div>
 
